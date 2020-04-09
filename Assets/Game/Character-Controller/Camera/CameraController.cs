@@ -10,9 +10,11 @@ public class CameraController : MonoBehaviour
     public string mouseYName;
     public float mouseX;
     public float mouseY;
+    public bool FlipmouseX;
+    public bool FlipmouseY;
 
     [Header("Camera Settings : ")]
-    [Range(0, 100)]public float sensitivity;
+    [Range(0, 100)] public float sensitivity;
     public Transform target;
     public Vector3 offset;
     public Vector2 xRotationMinMax;
@@ -25,7 +27,7 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         cur = this;
-        if(target == null)
+        if (target == null)
         {
             target = GameObject.FindGameObjectWithTag("Player").transform;
         }
@@ -42,16 +44,7 @@ public class CameraController : MonoBehaviour
         if (aiming && pwConfig)
         {
             CamUpdate(pwConfig.sensitivity, pwConfig.offset, pwConfig.xRotationMinMax, pwConfig.detectableLayers);
-            RaycastHit hit;
-            Ray ray = new Ray(transform.position, transform.forward);
-            if (Physics.Raycast(ray, out hit, pwConfig.range, 1 << gameObject.layer))
-            {
-                Aimpoint = hit.point;
-            }
-            else
-            {
-                Aimpoint = ray.GetPoint(pwConfig.range);
-            }
+
         }
         else
         {
@@ -61,8 +54,14 @@ public class CameraController : MonoBehaviour
 
     void CamUpdate(float sensitivity, Vector3 offset, Vector2 xRotationMinMax, LayerMask detectableLayers)
     {
-        mouseX += (Input.GetAxis(mouseYName) * Time.deltaTime) * sensitivity;
-        mouseY += (Input.GetAxis(mouseXName) * Time.deltaTime) * sensitivity;
+        if (FlipmouseX)
+            mouseX -= (Input.GetAxis(mouseYName) * Time.deltaTime) * sensitivity;
+        else
+            mouseX += (Input.GetAxis(mouseYName) * Time.deltaTime) * sensitivity;
+        if (FlipmouseX)
+            mouseY -= (Input.GetAxis(mouseXName) * Time.deltaTime) * sensitivity;
+        else
+            mouseX += (Input.GetAxis(mouseYName) * Time.deltaTime) * sensitivity;
         mouseX = Mathf.Clamp(mouseX, xRotationMinMax.x, xRotationMinMax.y);
 
         transform.eulerAngles = new Vector3(mouseX, mouseY, 0f);
@@ -75,7 +74,7 @@ public class CameraController : MonoBehaviour
 
     void HandleCollisions(Vector3 _originalPosition, LayerMask detectableLayers)
     {
-        if(Physics.Linecast(target.position, _originalPosition, out RaycastHit hit, detectableLayers))
+        if (Physics.Linecast(target.position, _originalPosition, out RaycastHit hit, detectableLayers))
         {
             transform.position = hit.point + hit.normal * 0.1f;
             return;

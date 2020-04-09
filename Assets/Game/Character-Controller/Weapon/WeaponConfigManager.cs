@@ -10,7 +10,7 @@ public class WeaponConfigManager : MonoBehaviour
     public static Dictionary<int, WeaponConfig> weapons;
     public List<WeaponConfig> Weapons = new List<WeaponConfig>();
 
-    public void Start()
+    public void OnEnable()
     {
         if (weapons == null)
         {

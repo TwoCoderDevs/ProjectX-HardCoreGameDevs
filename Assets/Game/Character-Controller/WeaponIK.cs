@@ -45,7 +45,7 @@ public partial class Character
     public bool AssignWeapon()
     {
         weaponConfig = WeaponConfigManager.GetWeapon(WeaponID);
-        if(assigned)
+        if (assigned)
             return true;
         if (weaponConfig)
         {
@@ -55,7 +55,7 @@ public partial class Character
             m_Animator.SetInteger("GunType", 1);
             if (wholder.TwoHand)
             {
-                print(weaponConfig.gun + ":"+ weaponConfig.range);
+                print(weaponConfig.gun + ":" + weaponConfig.range);
                 wholder.Gun2 = Instantiate(weaponConfig.gun.gameObject).GetComponent<GunData>();
                 wholder.Gun2.Gun.parent = leftGunIK;
                 wholder.Gun2.Gun.localPosition = Vector3.zero;
@@ -69,7 +69,7 @@ public partial class Character
             wholder.Gun1.Gun.localEulerAngles = Vector3.zero;
             wholder.Gun1.muzzleFire = Instantiate(weaponConfig.gunData.muzzleFire.gameObject).GetComponent<ParticleSystem>();
             wholder.Gun1.muzzleFire.transform.parent = wholder.Gun1.muzzlepoint;
-            m_Animator.SetLayerWeight(1,1);
+            m_Animator.SetLayerWeight(1, 1);
             m_Animator.SetLayerWeight(3, 1);
             BulletSystem.SetupBullets(weaponConfig.gunData.bullet.GetComponent<BulletData>(), wholder.TwoHand, weaponConfig.gun.GetComponent<GunData>().MagSize);
             assigned = true;
@@ -85,7 +85,6 @@ public partial class Character
         m_Animator.SetLayerWeight(2, 0);
         m_Animator.SetLayerWeight(3, 0);
         m_Animator.SetLayerWeight(4, 0);
-        m_Animator.SetLayerWeight(5, 0);
         return false;
     }
     public Vector3 look;
@@ -98,10 +97,10 @@ public partial class Character
             useIK = true;
             if (m_ForwardAmount == 0)
                 transform.localEulerAngles = new Vector3(0f, camc.mouseY, 0f);
-            AimRot.LookAt(main.transform.forward*main.farClipPlane);
+            AimRot.LookAt(main.transform.forward * main.farClipPlane);
             var finalAim = AimTarget.position;
-            RightHandTarget.position = finalAim+ transform.TransformDirection(wholder.rightGTP);
-            LeftHandTarget.position = finalAim+ transform.TransformDirection(wholder.leftGTP);
+            RightHandTarget.position = finalAim + transform.TransformDirection(wholder.rightGTP);
+            LeftHandTarget.position = finalAim + transform.TransformDirection(wholder.leftGTP);
             look = main.transform.forward * main.farClipPlane;
             RightHandTarget.LookAt(look);
             RightHandTarget.eulerAngles = new Vector3(RightHandTarget.eulerAngles.x, RightHandTarget.eulerAngles.y, RightHandTarget.eulerAngles.z + wholder.rightExtrarot);
@@ -114,7 +113,6 @@ public partial class Character
             LeftHand.RotationWeight = 1;
             m_Animator.SetLayerWeight(2, 1);
             m_Animator.SetLayerWeight(4, 1);
-            m_Animator.SetLayerWeight(5, 1);
             aiming = true;
         }
         else
@@ -128,7 +126,6 @@ public partial class Character
             LeftHand.RotationWeight = 0;
             m_Animator.SetLayerWeight(2, 0);
             m_Animator.SetLayerWeight(4, 0);
-            m_Animator.SetLayerWeight(5, 0);
         }
     }
 }
