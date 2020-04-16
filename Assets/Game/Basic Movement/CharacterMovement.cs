@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -29,6 +31,10 @@ public class CharacterMovement : MonoBehaviour
 
     private CharacterController cc;
 
+    [Header("Other Stuff")]
+    [SerializeField] private GameObject cam;
+    private AnimatorStateInfo state;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,7 +48,7 @@ public class CharacterMovement : MonoBehaviour
     {
         CustomGravity();
         AnimatorUpdate();  
-        if(Mathf.Abs(ip.v) > 0.1f || Mathf.Abs(ip.h) > 0.1f) RotatePLayer();      
+        if(Mathf.Abs(ip.v) > 0.1f || Mathf.Abs(ip.h) > 0.1f) RotatePLayer();    
     }
 
     private void FixedUpdate() 
@@ -72,6 +78,17 @@ public class CharacterMovement : MonoBehaviour
         a.SetFloat("Horizontal", ip.h, 0f, Time.deltaTime);
         a.SetFloat("Vertical", ip.v, 0f, Time.deltaTime);
         a.SetFloat("Turn", ip.t, 0.3f, Time.deltaTime);
+
+        a.SetBool("Sprint", ip.sprint);
+    }
+
+    public void RollTrigger()
+    {
+        //RotatePlayerInInputDirection();
+        //StartCoroutine("DisableCC", 1f);
+        a.SetTrigger("Roll");
+
+        //Need to adjust CC Height to make it look realistic.
     }
     #endregion
 
@@ -94,15 +111,50 @@ public class CharacterMovement : MonoBehaviour
 
     void RotatePLayer()
     {
+        if(ip.sprint)
+        {
+            RotatePlayerInInputDirection(); 
+            return;
+        }
+
         Vector3 dir = ip.target.position - transform.position;       
         Quaternion rot = Quaternion.LookRotation(dir);
         rot.x = 0f; rot.z = 0f;
 
         transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * rotationSpeed); 
     }
+
+    void RotatePlayerInInputDirection()
+    {
+        var forward = cam.transform.forward; forward.y = 0;
+        var right = cam.transform.right; right.y = 0;
+
+        forward.Normalize();
+        right.Normalize();
+
+        Vector3 dir = forward * ip.v + right * ip.h;
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * rotationSpeed);
+    }
     #endregion
 
-    #region FootGrounding
+    #region SomeUsefulFunctions
+    IEnumerator DisableCC(float time)
+    {
+        cc.enabled = false;
+        yield return new WaitForSeconds(time);
+        cc.enabled = true;
+    }
+
+    void AdjustCCHeiht()
+    {
+        //I Don't really know how to do it......
+    }
+        
+    #endregion
+
+
+    #region IKStuff
     private void OnAnimatorIK(int layerIndex) 
     {
         if(!enbleIK || !a) return;
