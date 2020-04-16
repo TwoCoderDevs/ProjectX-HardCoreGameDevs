@@ -60,6 +60,18 @@ public class CharacterMovement : MonoBehaviour
     }
     #endregion
 
+    #region Move Other Rigidbody
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit != null)
+            if (hit.rigidbody)
+            {
+                hit.rigidbody.AddForce(hit.normal * hit.rigidbody.mass * Physics.gravity.magnitude, ForceMode.Impulse);
+                hit.rigidbody.AddTorque(hit.normal * hit.rigidbody.mass * Physics.gravity.magnitude, ForceMode.Impulse);
+            }
+    }
+    #endregion
+
     #region PlayerRotation
 
     void RotatePLayer()
