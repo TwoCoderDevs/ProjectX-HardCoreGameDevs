@@ -5,6 +5,8 @@ public class CharacterMovement : MonoBehaviour
     private CharacterInput ip;
     private Animator a;
     [SerializeField, Range(5f, 50f)] private float rotationSpeed = 10f;
+    [Header("Rigidbody")]
+    public float mass;
 
     [Header("Foot Placement")]
     public bool enbleIK;
@@ -63,13 +65,14 @@ public class CharacterMovement : MonoBehaviour
     #region Move Other Rigidbody
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        var normal = -hit.normal;
         if (hit != null)
             if (hit.rigidbody && hit.collider)
             {
                 if (hit.collider is BoxCollider || hit.collider is CapsuleCollider)
-                    hit.rigidbody.AddForce(hit.normal * hit.rigidbody.mass * Physics.gravity.magnitude, ForceMode.Impulse);
+                    hit.rigidbody.AddForce(normal * mass * hit.rigidbody.mass * Physics.gravity.magnitude, ForceMode.Impulse);
                 if (hit.collider is SphereCollider)
-                    hit.rigidbody.AddTorque(hit.normal * hit.rigidbody.mass * Physics.gravity.magnitude, ForceMode.Impulse);
+                    hit.rigidbody.AddTorque(normal * mass * hit.rigidbody.mass * Physics.gravity.magnitude, ForceMode.Impulse);
             }
     }
     #endregion

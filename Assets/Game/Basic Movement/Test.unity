@@ -3143,6 +3143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 10
+  mass: 1
   enbleIK: 1
   heightFromGroundRaycast: 1.14
   raycastDownDistance: 1.5
