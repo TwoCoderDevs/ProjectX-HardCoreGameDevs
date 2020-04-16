@@ -27,9 +27,12 @@ public class CharacterMovement : MonoBehaviour
     private Quaternion lfIKr, rfIKr;
     private float lastPelvispY, lastLfpY, lastRfpY;
 
+    private CharacterController cc;
+
     // Start is called before the first frame update
     void Start()
     {
+        cc = GetComponent<CharacterController>();
         ip = GetComponent<CharacterInput>();   
         a = GetComponent<Animator>();     
     }
@@ -37,6 +40,7 @@ public class CharacterMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CustomGravity();
         AnimatorUpdate();  
         if(Mathf.Abs(ip.v) > 0.1f || Mathf.Abs(ip.h) > 0.1f) RotatePLayer();      
     }
@@ -52,6 +56,15 @@ public class CharacterMovement : MonoBehaviour
         FeetPositionSolver(rfp, ref rfIKp, ref rfIKr); 
         FeetPositionSolver(lfp, ref lfIKp, ref lfIKr); 
     }
+
+    #region CustomGravity
+    void CustomGravity()
+    {
+        if(cc.isGrounded) return;
+
+        cc.Move(new Vector3(0, -9.81f * Time.deltaTime, 0));
+    }
+    #endregion
 
     #region Animation
     void AnimatorUpdate()
