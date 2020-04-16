@@ -64,10 +64,12 @@ public class CharacterMovement : MonoBehaviour
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (hit != null)
-            if (hit.rigidbody)
+            if (hit.rigidbody && hit.collider)
             {
-                hit.rigidbody.AddForce(hit.normal * hit.rigidbody.mass * Physics.gravity.magnitude, ForceMode.Impulse);
-                hit.rigidbody.AddTorque(hit.normal * hit.rigidbody.mass * Physics.gravity.magnitude, ForceMode.Impulse);
+                if (hit.collider is BoxCollider || hit.collider is CapsuleCollider)
+                    hit.rigidbody.AddForce(hit.normal * hit.rigidbody.mass * Physics.gravity.magnitude, ForceMode.Impulse);
+                if (hit.collider is SphereCollider)
+                    hit.rigidbody.AddTorque(hit.normal * hit.rigidbody.mass * Physics.gravity.magnitude, ForceMode.Impulse);
             }
     }
     #endregion
