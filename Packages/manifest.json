@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.tayx.graphy": "https://github.com/Tayx94/graphy.git#dev-upm",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.2d.tilemap": "1.0.0",
     "com.unity.ads": "2.0.8",
@@ -63,5 +64,11 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
+  },
+  "lock": {
+    "com.tayx.graphy": {
+      "revision": "dev-upm",
+      "hash": "d16473e71eeb11c611af96db01d7565ef179b2b3"
+    }
   }
 }

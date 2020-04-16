@@ -1,3 +1,0 @@
-# Character Controller
- Project X Character System
-Rewriting in with live update.....
