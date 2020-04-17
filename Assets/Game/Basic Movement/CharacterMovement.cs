@@ -31,7 +31,6 @@ public class CharacterMovement : MonoBehaviour
 
     [Header("Other Stuff")]
     [SerializeField] private GameObject cam;
-    private AnimatorStateInfo state;
 
     // Start is called before the first frame update
     void Start()
@@ -66,7 +65,7 @@ public class CharacterMovement : MonoBehaviour
     {
         if(cc.isGrounded) return;
 
-        cc.Move(Physics.gravity * Time.deltaTime);
+        cc.Move(new Vector3(0, -9.81f * Time.deltaTime, 0));
     }
     #endregion
 
@@ -87,6 +86,18 @@ public class CharacterMovement : MonoBehaviour
         a.SetTrigger("Roll");
 
         //Need to adjust CC Height to make it look realistic.
+    }
+    #endregion
+
+    #region Move Other Rigidbody
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {           
+        Rigidbody rb = hit.collider.attachedRigidbody;
+        
+        if (rb == null || rb.isKinematic) return;
+            
+        Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+        rb.velocity = pushDir * hit.controller.velocity.magnitude;
     }
     #endregion
 
@@ -135,6 +146,7 @@ public class CharacterMovement : MonoBehaviour
     }
         
     #endregion
+
 
     #region IKStuff
     private void OnAnimatorIK(int layerIndex) 
