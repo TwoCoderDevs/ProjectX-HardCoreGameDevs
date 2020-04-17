@@ -237,5 +237,29 @@ public class CharacterMovement : MonoBehaviour
         fp = a.GetBoneTransform(foot).position;
         fp.y = transform.position.y + heightFromGroundRaycast;
     }
+    private RaycastHit[] hits1 = new RaycastHit[10];
+
+    private RaycastHit[] hits2 = new RaycastHit[10];
+    private void RayScaning()
+    {
+        if (Physics.BoxCastNonAlloc(transform.position + new Vector3(0, 0.5f, 0), new Vector3(0.5f, 0.5f, 0.5f), Vector3.down, hits1, new Quaternion(0, 0, 0, 0), raycastDownDistance + heightFromGroundRaycast, environmentLayer) > 0)
+        {
+            
+        }
+        var pos = Vector3.Lerp(transform.position + new Vector3(0, 0.5f, 0), (transform.forward + new Vector3(0, 0.5f, 0)) * 2, a.speed * Time.fixedDeltaTime);
+        if (Physics.BoxCastNonAlloc(transform.position + new Vector3(0, 0.5f, 0), new Vector3(0.5f, 0.5f, 0.5f), Vector3.down, hits2, new Quaternion(0, 0, 0, 0), raycastDownDistance + heightFromGroundRaycast, environmentLayer) > 0)
+        {
+
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(transform.position + new Vector3(0, 0.25f, 0), new Vector3(0.5f, 0.5f, 0.5f));
+        var pos = Vector3.Lerp(transform.position + new Vector3(0, 0.25f, 0), (transform.forward + new Vector3(0.25f, 0.25f, 0.25f)), a.velocity.magnitude * Time.fixedDeltaTime);
+        Gizmos.DrawWireCube(pos, new Vector3(0.5f, 0.5f, 0.5f));
+    }
+
     #endregion
 }
